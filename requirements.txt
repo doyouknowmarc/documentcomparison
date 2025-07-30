@@ -6,3 +6,4 @@ htmldiff2
 Genshi
 pypandoc
 pandoc
+gunicorn

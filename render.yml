@@ -1,0 +1,25 @@
+# Render Blueprint
+# Commit this file at the root of your repo so Render can auto-detect it.
+
+services:
+  - type: web
+    name: documentcomparison          # ← change if you want a different service name
+    runtime: python
+    plan: free                    # starter / standard / pro are also valid
+
+    buildCommand: |
+      pip install -r requirements.txt
+
+    # Production entry-point: 3 Gunicorn workers, each with 8 threads
+    startCommand: >
+      gunicorn app:app
+      -w 3                 # workers
+      -k gthread           # threaded worker class
+      --threads 8
+      --timeout 0          # disable timeouts for large uploads
+      -b 0.0.0.0:$PORT     # bind to Render-provided port
+
+    # Optional: environment variables you define in the Render dashboard
+    envVars:
+      - key: FLASK_ENV
+        value: production

@@ -2,7 +2,7 @@
 python -m venv env
 source env/bin/activate
 pip install -r requirements.txt
-python app.py 
+gunicorn app:app
 ---
 
 App for comparing documents.
