@@ -28,6 +28,10 @@
         .btn.secondary:hover { background-color: #5a6268; }
         .btn.active { background-color: #28a745; color: white; border-color: #28a745; }
 
+        /* --- Side-by-Side Layout --- */
+        #side-by-side { display: none; gap: 20px; margin-top: 20px; }
+        #side-by-side .side-pane { flex: 1; border: 1px solid #dddfe2; padding: 10px; overflow-y: auto; max-height: 70vh; }
+
         /* --- CSS for View Filtering --- */
         .document-content.show-original ins { display: none; }
         .document-content.show-final del { display: none; }
@@ -54,20 +58,35 @@
                 <button id="filter-final" class="btn">Final (V2)</button>
             </div>
             <div class="action-buttons">
+                <button id="toggle-view-btn" class="btn secondary">Side-by-Side View</button>
                 <button id="edit-btn" class="btn secondary">Edit</button>
                 <button id="save-btn" class="btn primary">Save & Export as DOCX</button>
             </div>
         </div>
-        
+
         <div id="document-content" class="document-content">
             <!-- The 'safe' filter renders the HTML from the server -->
             {{ comparison_html | safe }}
+        </div>
+
+        <div id="side-by-side">
+            <div class="side-pane" id="base-pane">
+                {{ base_html | safe }}
+            </div>
+            <div class="side-pane" id="diff-pane">
+                {{ comparison_html | safe }}
+            </div>
+            <div class="side-pane" id="new-pane">
+                {{ new_html | safe }}
+            </div>
         </div>
     </div>
 
     <!-- === NEW JAVASCRIPT SECTION === -->
     <script>
         const docContent = document.getElementById('document-content');
+        const sideBySide = document.getElementById('side-by-side');
+        const toggleViewBtn = document.getElementById('toggle-view-btn');
         const editBtn = document.getElementById('edit-btn');
         const saveBtn = document.getElementById('save-btn');
 
@@ -87,6 +106,20 @@
                     docContent.classList.add('show-final');
                 }
             });
+        });
+
+        // --- Side-by-Side Toggle Logic ---
+        toggleViewBtn.addEventListener('click', function() {
+            const showingSideBySide = sideBySide.style.display === 'flex';
+            if (showingSideBySide) {
+                sideBySide.style.display = 'none';
+                docContent.style.display = 'block';
+                this.textContent = 'Side-by-Side View';
+            } else {
+                sideBySide.style.display = 'flex';
+                docContent.style.display = 'none';
+                this.textContent = 'Overlay View';
+            }
         });
 
         // --- Feature 2: Live Editing Logic ---
