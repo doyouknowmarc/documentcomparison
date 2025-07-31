@@ -21,7 +21,12 @@ def compare():
     base_html = mammoth.convert_to_html(io.BytesIO(base_file.read())).value
     new_html = mammoth.convert_to_html(io.BytesIO(new_file.read())).value
     comparison_html = render_html_diff(base_html, new_html)
-    return render_template('result.html', comparison_html=comparison_html)
+    return render_template(
+        'result.html',
+        comparison_html=comparison_html,
+        base_html=base_html,
+        new_html=new_html,
+    )
 
 # --- REPLACE YOUR OLD EXPORT FUNCTION WITH THIS ONE ---
 @app.route('/export', methods=['POST'])
